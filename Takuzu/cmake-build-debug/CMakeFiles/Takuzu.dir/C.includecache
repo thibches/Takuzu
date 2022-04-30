@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/chesn/CLionProjects/Takuzu/Fonctions.c
+Fonctions.h
+C:/Users/chesn/CLionProjects/Takuzu/Fonctions.h
+
+C:/Users/chesn/CLionProjects/Takuzu/Fonctions.h
+stdio.h
+-
+stdlib.h
+-
+stdbool.h
+-
+time.h
+-
+

@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/chesn/CLionProjects/TP9/liste.c
+liste.h
+C:/Users/chesn/CLionProjects/TP9/liste.h
+
+C:/Users/chesn/CLionProjects/TP9/liste.h
+stdio.h
+-
+stdlib.h
+-
+stdbool.h
+-
+math.h
+-
+

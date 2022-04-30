@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/chesn/CLionProjects/TP5/TP5.h
+stdio.h
+-
+
+C:/Users/chesn/CLionProjects/TP5/main.c
+TP5.h
+C:/Users/chesn/CLionProjects/TP5/TP5.h
+tableau.h
+C:/Users/chesn/CLionProjects/TP5/tableau.h
+
+C:/Users/chesn/CLionProjects/TP5/tableau.c
+tableau.h
+C:/Users/chesn/CLionProjects/TP5/tableau.h
+
+C:/Users/chesn/CLionProjects/TP5/tableau.h
+stdio.h
+-
+stdlib.h
+-
+

@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/chesn/CLionProjects/TP4/TP4.c
+stdio.h
+-
+TP4.h
+C:/Users/chesn/CLionProjects/TP4/TP4.h
+
+C:/Users/chesn/CLionProjects/TP4/TP4.h
+stdio.h
+-
+
