@@ -1,7 +1,12 @@
 #include "Fonctions.h"
 
+
 int main(){
-    char choix;
+
+
+
+    srand(time(NULL));
+    int choix;
     // affichage menu pricipal
     menu_principal(&choix);
     return 0;

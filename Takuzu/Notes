@@ -1,3 +1,7 @@
+--> Prb avec le choix : entrer 131 et voir
+--> changer le char choix en int choix (pensser au fflush(stdin))
+
+
 Charactères spéciaux: (voir photo code ascii)
  - é: \x82
  - è: \x8A
