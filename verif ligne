@@ -1,0 +1,56 @@
+void verif_ligne(int *grille_test, int taille, bool *verif){
+    taille = sqrt(taille);
+    int cpt0 = 0, cpt1 = 0;
+    int sim1 = 0, sim2 = 0, sim3 = 0, sim4 = 0, sim5 = 0, sim6 = 0, sim7 = 0;
+    while (*verif) {
+        for (int i = 0; i < taille; i++) {
+            for (int j = 0; j < taille; j++) {
+            // 0 et 1 d'affilés
+                if (j < taille - 2 && *verif)
+                    if (grille_test[i * taille + j] == grille_test[i * taille + j + 1] && grille_test[i * taille + j] == grille_test[i * taille + j + 2] && grille_test[i * taille + j] != 3){
+                        *verif = false;
+                        printf("\nCoup non valide : il ne peut y avoir seulement deux caract\x8ares identiques d'affil\x82\n");
+                        break;
+                    }
+            // nombre de 0 ou de 1 par ligne
+                if (grille_test[i * taille + j] == 0)
+                    cpt0++;
+                else if (grille_test[i * taille + j] == 1)
+                    cpt1++;
+                if (cpt0 > taille / 2 || cpt1 > taille / 2 && *verif) {
+                    *verif = false;
+                    printf("\nCoup non valide : le nombre de 0 ou de 1 est sup\x82rieur \x85 %d sur la ligne\n", taille / 2);
+                    break;
+                }
+            // lignes identiques
+                for (int k = i + 1; k < taille; k++){
+                    if (grille_test[i * taille + j] == grille_test[k * taille + j] && grille_test[i * taille + j] != 3) {
+                        if (k == 1)
+                            sim1 ++;
+                        else if (k == 2)
+                            sim2 ++;
+                        else if (k == 3)
+                            sim3 ++;
+                        else if (k == 4)
+                            sim4 ++;
+                        else if (k == 5)
+                            sim5 ++;
+                        else if (k == 6)
+                            sim6 ++;
+                        else if (k == 7)
+                            sim7 ++;
+                    }
+                }
+            }
+            cpt0 = 0;
+            cpt1 = 0;
+            if (sim1 == taille || sim2 == taille || sim3 == taille || sim4 == taille || sim5 == taille || sim6 == taille || sim7 == taille && *verif){
+                *verif = false;
+                printf("\nCoup non valide : deux lignes sont identiques\n");
+                break;
+            }
+            sim1 = sim2 = sim3 = sim4 = sim5 = sim6 = sim7 = 0;
+        }
+        break;
+    }
+}
