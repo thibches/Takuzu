@@ -9,6 +9,8 @@
 #include <stdbool.h>
 #include <time.h>
 #include <math.h>
+#include <unistd.h>
+
 
 /// Menus
 void menu_principal(int* choix);
@@ -26,13 +28,14 @@ int* generer_grille_jeu(int taille, int *grille_solution, int *grille_masque);
 
 
 /// Jouer
-void jouer(int taille,  int *grille_jeu, int *choix);
+void jouer(int taille, int *grillle_solution, int *grille_jeu, int *choix);
 void afficher_grille(int taille, int *grille);
 bool verif_saisie(int taille, char colonne, int ligne);
 int convertir_coordonnees(int taille, char colonne, int ligne);
+bool grille_complete(int taille, int *grille_jeu);
 
 /// Verifications
-void verif_reponse(int *grille_jeu, int indice, int taille, int reponse);
+bool verif_reponse(int *grille_jeu, int indice, int taille, int reponse, int *choix);
 void verif_ligne(int *grille_test, int taille, bool *verif);
 void verif_colonne(int *grille_test, int taille, bool *verif);
 

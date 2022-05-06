@@ -1,13 +1,11 @@
---> Prb avec le choix : entrer 131 et voir
---> changer le char choix en int choix (pensser au fflush(stdin))
-
+--> Finir verif colonne
+--> Penser a ajouter les indices
 
 Charactères spéciaux: (voir photo code ascii)
  - é: \x82
  - è: \x8A
  - â : \x83
 
-Uilisation de carcatères pour menu afin eviter problème lorsqu'on saisie des lettres, ...
 
 pour utiliser un fichier, il faut le créer dans le cmake-build-debug !
 

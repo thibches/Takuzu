@@ -8,6 +8,7 @@
 void menu_principal(int* choix){
     // boucle pour choix sécurisé
     do {
+        *choix = 0;
         fflush(stdin);
         // affichage menu
         printf("\n***** MENU PRICIPAL *****\n"
@@ -60,13 +61,13 @@ void menu_principal(int* choix){
                    "Contactez les cr\x82taurs : louis.geslin@efrei.net ou thibault.chesnel@efrei.net\n");
             menu_principal(choix);
         }
-
     }
 }
 
 void menu_jouer(int* choix){
     // boucle pour choix sécurisé
     do {
+        *choix = 0;
         fflush(stdin);
         // affichage menu
         printf("\n***** MENU JOUER *****\n"
@@ -90,11 +91,80 @@ void menu_jouer(int* choix){
     switch (*choix){
 
         // choix : saisie manuelle du masque
-        case 1:{
+        case 1: {
             // choix taille
             int taille;
             choix_taille(&taille, choix);
-            printf("1");
+            // création grille solution
+            int *grille_solution = generer_grille_solution(taille, choix);
+            // création grille masque
+            int *grille_masque = creer_grille(taille);
+            char colonne;
+            int ligne;
+            bool verif;
+            bool masque = true;
+            char c = '\x82';
+            do {
+                // boucle de saisie sécurisée
+                do {
+                    //affichage interface
+                    printf("\n***** Masque manuel *****\n\n");
+                    afficher_grille(taille, grille_masque);
+                    printf("\n\nSaisir les coordonn%ces d'une case ou taper '00' pour retourner au menu jouer.\n"
+                           "Saisie : ", c);
+                    scanf(" %c %d", &colonne, &ligne);
+                    verif = verif_saisie(taille, colonne, ligne);
+                    // message erreur si saisie incorect
+                    if (verif != true) {
+                        printf("\nErreur : saisie incorrect !\n");
+                    }
+                } while (verif != true);
+                if (colonne == '0')
+                    menu_jouer(choix);
+                else {
+                    int indice = convertir_coordonnees(taille, colonne, ligne);
+                    int reponse;
+                    do {
+                        fflush(stdin);
+                        printf("\nSaisir 0 (case invisible) ou 1 (case visible : ");
+                        scanf(" %d", &reponse);
+                        if (reponse != 0 && reponse != 1)
+                            printf("\nErreur : saisie incorrecte\n");
+                    } while (reponse != 0 && reponse != 1);
+                    grille_masque[indice] = reponse;
+                    do{
+                        *choix = 0;
+                        fflush(stdin);
+                        printf("\n1. Continuer\n"
+                               "2. Jouer\n"
+                               "3. Retour\n"
+                               "Choix : ");
+                        scanf(" %d", choix);
+                        if (*choix < 0 || *choix > 3)
+                            printf("\nErreur : saisie non valide");
+                    }while(*choix < 0 || *choix > 3);
+                    switch (*choix) {
+                        case 1:
+                            break;
+                        case 2:{
+                            int *grille_jeu = generer_grille_jeu(taille, grille_solution, grille_masque);
+                            masque = false;
+                            jouer(taille, grille_solution, grille_jeu, choix);
+                            break;
+                        }
+                        case 3: {
+                            masque = false;
+                            break;
+                        }
+                        default:{
+                            masque = false;
+                            printf("\nErreur masque manuel.\n"
+                                   "Contactez les cr\x82taurs : louis.geslin@efrei.net ou thibault.chesnel@efrei.net\n");
+                        }
+                    }
+                }
+            }while(masque == true);
+            menu_jouer(choix);
             break;
         }
 
@@ -103,7 +173,28 @@ void menu_jouer(int* choix){
             // choix taille
             int taille;
             choix_taille(&taille, choix);
-            printf("2");
+            // création grille solution
+            int *grille_solution = generer_grille_solution(taille, choix);
+            // création grille masque
+            int* grille_masque = generer_grille_masque(taille);
+            // création de la grille jeu
+            int* grille_jeu = generer_grille_jeu(taille, grille_solution, grille_masque);
+            printf("\n***** Masque automatique *****\n");
+            afficher_grille(taille, grille_masque);
+            printf("\n\n");
+            afficher_grille(taille, grille_jeu);
+            do{
+                *choix = 0;
+                fflush(stdin);
+                printf("\n\n1. Jouer\n"
+                       "2. Retour\n"
+                       "Saisie : ");
+                scanf(" %d", choix);
+                if (*choix != 1 && *choix != 2)
+                    printf("Erreur : saisie non valide");
+            }while (*choix != 1 && *choix != 2);
+            if (*choix == 1)
+                jouer(taille, grille_solution, grille_jeu, choix);
             break;
         }
 
@@ -119,10 +210,9 @@ void menu_jouer(int* choix){
             // création de la grille jeu
             int* grille_jeu = generer_grille_jeu(taille, grille_solution, grille_masque);
             // jouer
-            jouer(taille, grille_jeu, choix);
+            jouer(taille, grille_solution, grille_jeu, choix);
             break;
         }
-
         // choix : retour
         case 4:{
             menu_principal(choix);
@@ -133,16 +223,17 @@ void menu_jouer(int* choix){
         default:{
             printf("\nErreur menu jouer.\n"
                    "Contactez les cr\x82taurs : louis.geslin@efrei.net ou thibault.chesnel@efrei.net\n");
-            menu_jouer(choix);
         }
-
     }
+    menu_jouer(choix);
 }
 
 /// Grilles
 void choix_taille(int* taille, int *choix){
     // boucle pour choix sécurisé
     do {
+        *choix = 0;
+        fflush(stdin);
         printf("\n***** Taille *****\n"
                "  1. 4x4\n"
                "  2. 8x8\n"
@@ -377,50 +468,73 @@ int* generer_grille_jeu(int taille, int *grille_solution, int *grille_masque){
 
 /// Jouer
 
-void jouer(int taille, int *grille_jeu,int *choix){
+void jouer(int taille, int *grille_solution, int *grille_jeu,int *choix){
     char colonne;
     int ligne;
     bool verif;
+    int vie = 3;
     char c = '\x82';
-    // boucle de saisie sécurisée
+    bool resultat = true;
     do {
-        //affichage interface
-        printf("\n***** Jouer *****\n\n");
-        afficher_grille(taille, grille_jeu);
-        printf("\n\nSaisir les coordonn%ces d'une case  ou taper '00' pour retourner au menu principal\n"
-               "Saisie : ", c);
-        scanf(" %c %d", &colonne, &ligne);
-        verif = verif_saisie(taille, colonne, ligne);
-        // message erreur si saisie incorect
-        if (verif != true) {
-            printf("\nErreur : saisie incorrect !\n");
-        }
-    } while (verif != true);
-    if (colonne == '0')
-        menu_jouer(choix);
-    else {
-        int indice = convertir_coordonnees(taille, colonne, ligne);
-        if (grille_jeu[indice] != 3){
-            printf("\nErreur : la case s%clectionn%ce ne peut pas \x88tre modifi%ce\n", c, c, c);
-            jouer(taille, grille_jeu, choix);
-        }
+        // boucle de saisie sécurisée
+        do {
+            //affichage interface
+            printf("\n***** Jouer *****\n\n");
+            afficher_grille(taille, grille_jeu);
+            printf("\n\nVous avez : %d vies.\n"
+                   "Saisir les coordonn%ces d'une case ou taper '00' pour retourner au menu jouer.\n"
+                   "Saisie : ", vie, c);
+            scanf(" %c %d", &colonne, &ligne);
+            verif = verif_saisie(taille, colonne, ligne);
+            // message erreur si saisie incorect
+            if (verif != true) {
+                printf("\nErreur : saisie incorrect !\n");
+            }
+        } while (verif != true);
+        if (colonne == '0')
+            menu_jouer(choix);
         else {
-            int reponse;
-            do{
-                fflush(stdin);
-                printf("\nSaisir 0 ou 1 : ");
-                scanf(" %d", &reponse);
-                if (reponse != 0 && reponse != 1)
-                    printf("\nErreur : saisie incorrecte\n");
-                }while(reponse != 0 && reponse != 1);
-            verif_reponse(grille_jeu, indice, taille, reponse);
+            int indice = convertir_coordonnees(taille, colonne, ligne);
+            if (grille_jeu[indice] != 3) {
+                printf("\nErreur : la case s%clectionn%ce ne peut pas \x88tre modifi%ce.\n", c, c, c);
+            }
+            else {
+                int reponse;
+                do {
+                    fflush(stdin);
+                    printf("\nSaisir 0 ou 1 : ");
+                    scanf(" %d", &reponse);
+                    if (reponse != 0 && reponse != 1)
+                        printf("\nErreur : saisie incorrecte\n");
+                } while (reponse != 0 && reponse != 1);
+                verif = verif_reponse(grille_jeu, indice, taille, reponse, choix);
+                if (verif == false) {
+                    vie--;
+                    if (vie == 0)
+                        resultat = false;
+                }
+                else {
+                    if (reponse != grille_solution[indice] && taille != 16)
+                        printf("\nCoup valide mais incorrect !\n");
+                    else
+                        grille_jeu[indice] = reponse;
+                }
+            }
         }
-    }
+    }while(grille_complete(taille, grille_jeu) == false && resultat == true);
+    printf("\n");
+    afficher_grille(taille, grille_jeu);
+    if (resultat)
+        printf("\n\nF\x82licitation !\n");
+    else
+        printf("\nPerdu ! Vous n'avez plus de vie.\n");
+    sleep(2);
 }
 
 void afficher_grille(int taille,int *grille){
     // nombre de lignes nécessaires à l'affichage
     int nbr_lignes = sqrt(taille) * 2;
+    taille = sqrt(taille) / 2;
     // affichage haut de la grille
     if (nbr_lignes == 8)
         printf("     A    B    C    D\n"
@@ -433,7 +547,7 @@ void afficher_grille(int taille,int *grille){
         if ((i == 0 || i == 2 || i == 4 || i == 6 || i == 8 || i == 10 || i == 12 || i == 14) && i < nbr_lignes) {
             printf("\n%d \xb3", cpt);
             cpt++;
-            for (int j = 2 * i; j <  2 * i + nbr_lignes / 2; j++){
+            for (int j = taille * i; j <  taille * i + nbr_lignes / 2; j++){
                 if (grille[j] == 3)
                     printf("    \xb3");
                 else
@@ -463,9 +577,9 @@ bool verif_saisie(int taille, char colonne, int ligne){
             return false;
     if (taille == 16 && colonne != 'a' && colonne != 'b' && colonne != 'c' && colonne != 'd' && colonne != 'A' && colonne != 'B' && colonne != 'C' && colonne != 'D')
         return false;
-    if (ligne != 1 && ligne != 2 && ligne != 3 && ligne != 4 && ligne != 5 && ligne != 6 && ligne != 7 && ligne != 8)
+    if (ligne < 1 || ligne > 8)
         return false;
-    if (taille == 16 && ligne != 1 && ligne != 2 && ligne != 3 && ligne != 4)
+    if (taille == 16 && ligne > 4)
         return false;
     return true;
 }
@@ -481,44 +595,81 @@ int convertir_coordonnees(int taille, char colonne, int ligne){
     return cln + ligne * taille;
 }
 
+bool grille_complete(int taille, int *grille_jeu){
+    for (int i = 0; i < taille; i++) {
+        if (grille_jeu[i] == 3)
+            return false;
+    }
+    return true;
+}
+
 /// Vérification
 
-void verif_reponse(int *grille_jeu, int indice, int taille, int reponse){
+bool verif_reponse(int *grille_jeu, int indice, int taille, int reponse, int *choix){
     int grille_test[taille];
     for (int i = 0; i < taille; i ++)
         grille_test[i] = grille_jeu[i];
     grille_test[indice] = reponse;
     bool verif = true;
-    while (verif) {
-        verif_ligne(grille_test, taille, &verif);
-        verif_colonne(grille_test, taille, &verif);
-        break;
-    }
-    if (verif)
-        printf("ok");
-    else
-        printf("no");
 
+    verif_ligne(grille_test, taille, &verif);
+    verif_colonne(grille_test, taille, &verif);
+
+    return verif;
 }
 
 void verif_ligne(int *grille_test, int taille, bool *verif){
     taille = sqrt(taille);
-    int cpt0 = 0;
-    int cpt1 = 0;
+    int cpt0 = 0, cpt1 = 0;
+    int sim1 = 0, sim2 = 0, sim3 = 0, sim4 = 0, sim5 = 0, sim6 = 0, sim7 = 0;
     while (*verif) {
         for (int i = 0; i < taille; i++) {
             for (int j = 0; j < taille; j++) {
+            // 0 et 1 d'affilés
+                if (j < taille - 2 && *verif)
+                    if (grille_test[i * taille + j] == grille_test[i * taille + j + 1] && grille_test[i * taille + j] == grille_test[i * taille + j + 2] && grille_test[i * taille + j] != 3){
+                        *verif = false;
+                        printf("\nCoup non valide : il ne peut y avoir seulement deux caract\x8ares identiques d'affil\x82\n");
+                        break;
+                    }
+            // nombre de 0 ou de 1 par ligne
                 if (grille_test[i * taille + j] == 0)
                     cpt0++;
                 else if (grille_test[i * taille + j] == 1)
                     cpt1++;
-            }
-            if (cpt0 > taille / 2 || cpt1 > taille / 2) {
-                *verif = false;
-                break;
+                if (cpt0 > taille / 2 || cpt1 > taille / 2 && *verif) {
+                    *verif = false;
+                    printf("\nCoup non valide : le nombre de 0 ou de 1 est sup\x82rieur \x85 %d sur la ligne\n", taille / 2);
+                    break;
+                }
+            // lignes identiques
+                for (int k = i + 1; k < taille; k++){
+                    if (grille_test[i * taille + j] == grille_test[k * taille + j] && grille_test[i * taille + j] != 3) {
+                        if (k == 1)
+                            sim1 ++;
+                        else if (k == 2)
+                            sim2 ++;
+                        else if (k == 3)
+                            sim3 ++;
+                        else if (k == 4)
+                            sim4 ++;
+                        else if (k == 5)
+                            sim5 ++;
+                        else if (k == 6)
+                            sim6 ++;
+                        else if (k == 7)
+                            sim7 ++;
+                    }
+                }
             }
             cpt0 = 0;
             cpt1 = 0;
+            if (sim1 == taille || sim2 == taille || sim3 == taille || sim4 == taille || sim5 == taille || sim6 == taille || sim7 == taille && *verif){
+                *verif = false;
+                printf("\nCoup non valide : deux lignes sont identiques\n");
+                break;
+            }
+            sim1 = sim2 = sim3 = sim4 = sim5 = sim6 = sim7 = 0;
         }
         break;
     }
@@ -530,7 +681,8 @@ void verif_colonne(int *grille_test, int taille, bool *verif){
     int cpt1 = 0;
     while (*verif) {
         for (int i = 0; i < taille; i++) {
-            for (int j = i; j < taille * taille; j +=4){
+            for (int j = i; j < taille * taille; j +=taille){
+                // nombre de 0 et de 1 par colonne
                 if (grille_test[j] == 0)
                     cpt0++;
                 else if (grille_test[j] == 1)
@@ -538,6 +690,7 @@ void verif_colonne(int *grille_test, int taille, bool *verif){
             }
             if (cpt0 > taille / 2 || cpt1 > taille / 2) {
                 *verif = false;
+                printf("\nCoup non valide : le nombre de 0 ou de 1 est sup\x82rieur \x85 %d dans la colonne\n", taille / 2);
                 break;
             }
             cpt0 = 0;
@@ -546,6 +699,8 @@ void verif_colonne(int *grille_test, int taille, bool *verif){
         break;
     }
 }
+
+
 
 
 
