@@ -1,9 +1,8 @@
 #include "Fonctions.h"
 
-int main(int argc, char *argv[]){
-    srand(time(NULL));
-    int choix;
-    // affichage menu pricipal
-    menu_principal(&choix);
+int main(){
+    srand(time(NULL)); //pour générer nombres aléatoires
+    int choix; // variable pour naviguer dans les menus
+    menu_principal(&choix); // affichage menu pricipal
     return 0;
 }

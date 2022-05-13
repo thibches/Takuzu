@@ -30,7 +30,7 @@ int* generer_grille_jeu(int taille, int *grille_solution, int *grille_masque);
 
 /// Jouer
 void jouer(int taille, int *grillle_solution, int *grille_jeu, int *choix);
-void resoudre(int taille, int *grille_solution, int *grille_jeu, int *choix);
+void resoudre(int taille, int *grille_jeu);
 void afficher_grille(int taille, int *grille, int indice);
 bool verif_saisie(int taille, char colonne, int ligne);
 int convertir_coordonnees(int taille, char colonne, int ligne);
