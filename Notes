@@ -1,0 +1,31 @@
+Charactères spéciaux: (voir photo code ascii)
+ - é: \x82
+ - è: \x8A
+ - â : \x83
+
+
+
+
+
+pour utiliser un fichier, il faut le créer dans le cmake-build-debug !
+
+code de base pour traiter un fichier :
+        FILE *fp = fopen("fichier.txt", "r+");
+            if(fp == NULL){
+                printf("erreur");
+            }
+            char c;
+            while ((c = fgetc(fp)) != EOF){
+                printf("%c", c);
+
+            }
+
+
+Transformer un entier en chaine de carcatères :
+        int number,l;
+        char string[20];
+
+        printf("Enter a number: ");
+        scanf("%d", &number);
+
+        itoa(number,string,10);
